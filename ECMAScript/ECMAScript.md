@@ -1,6 +1,138 @@
 ### ES 2015 (ES6)
 
+#### let, const 
 
+let const 都是作用于块级作用域。
+
+const 被用于声明常量。 
+
+#### class , extends ,  super
+
+```javascript
+//class 定义一个 类
+//class 之间通过 extends 实现继承
+// super 关键字，替代父类的实例
+class Animal {
+    constructor(){
+        this.type = 'animal'
+    }
+    says(say){
+        console.log(this.type + ' says ' + say)
+    }
+}
+
+let animal = new Animal()
+animal.says('hello') //animal says hello
+
+class Cat extends Animal {
+    constructor(){
+        super()
+        this.type = 'cat'
+    }
+}
+
+let cat = new Cat()
+cat.says('hello') //cat says hello
+
+```
+
+#### Arrow function 
+
+写法更简洁。
+
+```javascript
+function (i){return i + 1}
+(i) => i+1 
+```
+
+##### this的指向 
+
+当我们使用箭头函数时，函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。
+
+#### template string (模版字符串)
+
+```javascript
+const template = 'template'
+let a = `this is a ${template} string`
+
+```
+
+
+
+#### destructuring
+
+ES6允许按照一定模式，从数组和对象中提取值，对变量进行赋值，这被称为解构
+
+```javaScript
+const object ={a:'a',b:'b'}
+let {a,b} = object
+
+let newObject ={a,b , c:'c'}
+```
+
+#### default, rest
+
+default ： function 默认参数
+
+```javascript
+function animal(type= 'cat'){
+ 	console.log(type)
+}
+animal()   //'cat'
+```
+
+rest 
+
+```javascript
+function animals(...types){
+		console.log(types)
+}
+```
+
+#### Set Map    
+
+Set数据结构，类似于array, 成员的值都是唯一。
+
+```javascript
+cosnt s = new Set()
+[2,3,4].forEach(ele=>s.add(ele))
+```
+
+- Set.prototype.consructor
+- Set.prptotype.size
+
+- Set.prototype.add(value)
+- Set.prototype.delete(value)
+- Set.prototype.has(value)
+- Set.prototype.clear()
+
+Array.from
+
+```javascript
+//数组去重
+let arr = [3,4,5,5,6]
+let newArr = Array.from(new Set(arr))
+```
+
+
+
+遍历操作
+
+- Set.prototype.keys()
+- Set.prototype.values()
+- Set.prototype.entries()
+- Set.prototype.forEach()
+
+##### WeakSet
+
+于Set 的区别：
+
+1. WeakSet 只能放置对象
+2. WeakSet 中的对象都是弱引用，
+
+#### Import  export
+
+#### Promise
 
 ### ES 2016
 
@@ -272,6 +404,102 @@ toString()返回一个function的字符串（甚至包含备注）
 
 #### BigInt 
 
-表现最大整数 
+#### 表现最大整数 
 
+```javaScript
+let a = 1234567890
+let b= 1234567890n
+
+```
+
+
+
+#### Dynamic imports  动态导入 
+
+其中按需加载这些逻辑资源都一般会在某一个事件回调中去执行
+
+```javascript
+el.onclick = () => {
+  import('/modules/my-module.js')
+    .then(module => {
+      // Do something with the module.
+    })
+    .catch(err => {
+      // load error;
+    })
+}
+```
+
+#### Nullish   空值合并运算符
+
+逻辑操作符，当左侧的操作数为  *null*   或者 *undefined* 返回其右侧操作数，否则返回左侧操作数。
+
+逻辑或操作符 **||** , 会在左侧操作数为 *假值* 时返回右侧操作数
+
+```javascript
+const foo = null ?? 'default string'; // default string
+
+let bar = '0' || 45   //45
+ 
+```
+
+#### Optional Chaining 可选链接
+
+可选的链接语法允许您访问深度嵌套的对象属性，而不必担心该属性是否存在。如果它真的存在，那就太好了！如果没有，则返回未定义的。
+
+```javascript
+let x ={prop1: {prop2: 200}}
+
+x.props1?.prop2   //200
+x.props1?.noPropn?.what    //undefined
+```
+
+
+
+#### Promise.allSettled
+
+我们知道 Promise.all 具有并发执行异步任务的能力。但它的最大问题就是 **如果参数中的任何一个promise为reject的话，则整个Promise.all 调用会立即终止**
+
+Promise.allSettled跟Promise.all类似, 其参数接受一个Promise的数组, 返回一个新的Promise, **唯一的不同在于, 它不会进行短路**, 也就是说当Promise全部处理完成后,我们可以拿到每个Promise的状态, 而不管是否处理成功。
+
+```javascript
+Promise.allSettled([
+  Promise.reject({ code: 500, msg: '服务异常' }),
+  Promise.resolve({ code: 200, list: [] }),
+  Promise.resolve({ code: 200, list: [] })
+]).then(res => {
+  console.log(res)
+  /*
+        0: {status: "rejected", reason: {…}}
+        1: {status: "fulfilled", value: {…}}
+        2: {status: "fulfilled", value: {…}}
+    */
+  // 过滤掉 rejected 状态，尽可能多的保证页面区域数据渲染
+  RenderContent(
+    res.filter(el => {
+      return el.status !== 'rejected'
+    })
+  )
+})
+
+```
+
+#### String.prototype.matchAll
+
+```javascript
+const  regexp = /[a-c]/g
+const str = 'abcdefg'
+conts iierator = str.matchAll(s)
+```
+
+#### globalThis
+
+```javascript
+// worker.js
+globalThis === self
+// node.js
+globalThis === global
+// browser.js
+globalThis === window
+```
 
